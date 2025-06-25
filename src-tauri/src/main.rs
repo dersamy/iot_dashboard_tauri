@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    iot_dashboard_lib::run()
+    iotdashboard_lib::run()
 }
