@@ -11,7 +11,7 @@
     "http:default",
     {
       "identifier": "http:default",
-      "allow": [ { "url": "https://echo.free.beeceptor.com"}],
+      "allow": [ { "url": "http://192.168.4.1"}],
       "deny": [{ "url": "https://private.tauri.app" }]
     }
   ] 

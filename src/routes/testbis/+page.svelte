@@ -7,14 +7,21 @@
   let showModal = false;
   let cards = [];
 
-  // Updated card types to match CardContent.svelte sensor types
+  // Updated card types with new control types
   const cardTypes = [
-    { id: 'temperature', name: 'Temperature Sensor', icon: '🌡️' },
-    { id: 'humidity', name: 'Humidity Sensor', icon: '💧' },
-    { id: 'pir', name: 'Motion Detector (PIR)', icon: '🚶' },
-    { id: 'gas', name: 'Gas Sensor', icon: '💨' },
-    { id: 'ldr', name: 'Light Sensor (LDR)', icon: '💡' },
-    { id: 'potentiometer', name: 'Potentiometer', icon: '🎚️' }
+    // Sensor types (read-only)
+    { id: 'temperature', name: 'Temperature Sensor', icon: '🌡️', type: 'sensor' },
+    { id: 'humidity', name: 'Humidity Sensor', icon: '💧', type: 'sensor' },
+    { id: 'pir', name: 'Motion Detector (PIR)', icon: '🚶', type: 'sensor' },
+    { id: 'gas', name: 'Gas Sensor', icon: '💨', type: 'sensor' },
+    { id: 'ldr', name: 'Light Sensor (LDR)', icon: '💡', type: 'sensor' },
+    { id: 'potentiometer', name: 'Potentiometer', icon: '🎚️', type: 'sensor' },
+    
+    // Control types (interactive)
+    { id: 'slider', name: 'Slider Control', icon: '🎛️', type: 'control' },
+    { id: 'toggle', name: 'Toggle Switch', icon: '🔘', type: 'control' },
+    { id: 'color', name: 'RGB Color Picker', icon: '🎨', type: 'control' },
+    { id: 'text', name: 'Text Input', icon: '📝', type: 'control' }
   ];
 
   // Load cards from localStorage on mount
@@ -23,14 +30,14 @@
     if (savedCards) {
       cards = JSON.parse(savedCards);
     } else {
-      // Default cards for demo - updated to use correct sensor types
+      // Default cards for demo
       cards = [
         { id: 'temp-1', type: 'temperature', title: 'Room Temperature', x: 0, y: 0, w: 1, h: 1 },
         { id: 'hum-1', type: 'humidity', title: 'Room Humidity', x: 1, y: 0, w: 1, h: 1 },
-        { id: 'pir-1', type: 'pir', title: 'Motion Detector', x: 2, y: 0, w: 1, h: 1 },
-        { id: 'gas-1', type: 'gas', title: 'Air Quality', x: 0, y: 1, w: 1, h: 1 },
-        { id: 'ldr-1', type: 'ldr', title: 'Ambient Light', x: 1, y: 1, w: 1, h: 1 },
-        { id: 'pot-1', type: 'potentiometer', title: 'Control Knob', x: 2, y: 1, w: 1, h: 1 }
+        { id: 'toggle-1', type: 'toggle', title: 'LED Control', x: 2, y: 0, w: 1, h: 1, endpoint: '/led' },
+        { id: 'slider-1', type: 'slider', title: 'Brightness', x: 0, y: 1, w: 1, h: 1, endpoint: '/brightness' },
+        { id: 'color-1', type: 'color', title: 'RGB Strip', x: 1, y: 1, w: 1, h: 1, endpoint: '/rgb' },
+        { id: 'text-1', type: 'text', title: 'Display Text', x: 2, y: 1, w: 1, h: 1, endpoint: '/display' }
       ];
     }
   });
@@ -49,7 +56,7 @@
   }
 
   function handleCardAdd(event) {
-    const { cardType, title } = event.detail;
+    const { cardType, title, endpoint } = event.detail;
     
     // Find a suitable position for the new card
     const existingPositions = new Set(cards.map(card => `${card.x},${card.y}`));
@@ -74,7 +81,8 @@
       x: newX,
       y: newY,
       w: 1,
-      h: 1
+      h: 1,
+      ...(cardType.type === 'control' && { endpoint: endpoint || '/default' })
     };
     
     cards = [...cards, newCard];
@@ -100,7 +108,7 @@
 
 <svelte:head>
   <title>IoT Educational Dashboard</title>
-  <meta name="description" content="Monitor and interact with educational IoT sensors in real-time" />
+  <meta name="description" content="Monitor and control educational IoT devices in real-time" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </svelte:head>
 
@@ -117,12 +125,12 @@
             IoT Educational Dashboard
           </h1>
           <p class="text-white/70 text-sm sm:text-base">
-            Monitor and control your educational IoT sensors in real-time
+            Monitor sensors and control devices in real-time
           </p>
           <div class="flex items-center gap-2 sm:gap-4 mt-2 text-xs sm:text-sm text-white/60 flex-wrap">
-            <span>📊 {cards.length} active sensors</span>
+            <span>📊 {cards.length} active cards</span>
             <span>🔄 Live updates</span>
-            <span class="hidden sm:inline">📱 Drag & drop layout</span>
+            <span class="hidden sm:inline">🎛️ Interactive controls</span>
           </div>
         </div>
         <div class="flex-shrink-0 w-full sm:w-auto">
@@ -162,7 +170,6 @@
     box-sizing: border-box;
   }
 
-  /* Ensure modal doesn't cause horizontal scroll */
   :global(html, body) {
     overflow-x: hidden;
   }
