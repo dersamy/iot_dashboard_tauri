@@ -11,7 +11,7 @@
     // Simulate loading and redirect
     setTimeout(() => {
       // Replace with your actual dashboard URL or use SvelteKit navigation
-      window.location.href = '/testbis';
+      window.location.href = '/dashboard';
     }, 1000);
   }
 
@@ -55,6 +55,9 @@
   {/each}
 
   <div class="welcome-container">
+    <div class="logo-container">
+      <img src="/favicon.png" alt="IoT Dashboard Logo" class="logo-image" />
+    </div>
     <h1 class="welcome-title">Welcome to MobotIOT Dashboard</h1>
     <p class="welcome-subtitle">Monitor sensors and control devices in real-time</p>
     
@@ -108,6 +111,25 @@
     padding: 2rem;
     position: relative;
     z-index: 2;
+  }
+
+  .logo-container {
+    margin-bottom: 2rem;
+    animation: fadeInUp 1s ease-out 0.1s both;
+  }
+
+  .logo-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    box-shadow: 
+      0 0 20px rgba(139, 69, 193, 0.6),
+      0 0 40px rgba(139, 69, 193, 0.4),
+      0 0 60px rgba(139, 69, 193, 0.2);
+    animation: neonBreath 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px rgba(174, 129, 255, 0.3));
+    margin: 0 auto;
+    display: block;
   }
 
   .welcome-title {
@@ -267,6 +289,24 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  @keyframes neonBreath {
+    0%, 100% {
+      box-shadow: 
+        0 0 20px rgba(139, 69, 193, 0.6),
+        0 0 40px rgba(139, 69, 193, 0.4),
+        0 0 60px rgba(139, 69, 193, 0.2);
+      filter: drop-shadow(0 0 10px rgba(174, 129, 255, 0.3));
+    }
+    50% {
+      box-shadow: 
+        0 0 30px rgba(139, 69, 193, 0.8),
+        0 0 60px rgba(139, 69, 193, 0.6),
+        0 0 90px rgba(139, 69, 193, 0.4),
+        0 0 120px rgba(139, 69, 193, 0.2);
+      filter: drop-shadow(0 0 20px rgba(174, 129, 255, 0.5));
+    }
   }
 
   @keyframes fadeInUp {
